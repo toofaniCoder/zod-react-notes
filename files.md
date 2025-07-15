@@ -7,17 +7,20 @@ This example demonstrates how to validate an uploaded file using Zod. It ensures
 - The file type must be PNG or JPEG
 
 ```js
+import * as z from "zod";
+
 const fileSchema = z.object({
   profile: z
-    .instanceof(File)
-    .refine((file) => file.size >= 500_000, {
+    .file()
+    .min(500_000, {
       message: "Profile picture must be at least 500KB.",
     })
-    .refine((file) => file.size < 900_000, {
+    .max(900_000, {
       message: "Profile picture must be less than 900KB.",
     })
-    .refine((file) => ["image/png", "image/jpeg"].includes(file.type), {
-      message: "File must be a PNG or JPEG image.",
+    .mime(["image/png", "image/jpeg"], {
+      message: "File must be in PNG or JPEG format.",
     }),
 });
+
 ```
